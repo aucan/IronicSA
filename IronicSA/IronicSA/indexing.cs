@@ -130,9 +130,11 @@ namespace IronicSA
         public string getMatrixesFull()
         {
             string folder = Path.GetDirectoryName(_dataPath) + "\\Full\\";
-            if (Directory.Exists(folder))
-                Directory.Delete(folder, true);
-            Directory.CreateDirectory(folder); 
+            string dataset = folder+ "dataset.txt";
+            if (!Directory.Exists(folder))
+                Directory.CreateDirectory(folder);
+            if (File.Exists(dataset))
+                File.Delete(dataset); 
 
             List<string> T = new List<string>();
 
@@ -141,9 +143,9 @@ namespace IronicSA
                 T.Add(getLine(i));
             }
             
-            File.AppendAllLines(folder + "full.txt", T);
+            File.AppendAllLines(dataset, T);
 
-            return folder;
+            return dataset;
         }
 
         public string getMatrixes(int foldCount)

@@ -23,22 +23,36 @@ namespace IronicSA
         {
             indexing inx = new indexing(@"C:\Users\Alaattin\Source\Repos\IronicSA\IronicSA\IronicSA\data\tweetdata.txt");
             inx.IndexingData();
+
+            string dataset = inx.getMatrixesFull();
+            TrainAndTest(dataset, dataset, dataset.Replace("dataset","result"));
+
+            /* 
             string datafolder = inx.getMatrixes(5);
             double total = 0;
             for (int i = 0; i < 5; i++)
             {
-                total += TrainAndTest(datafolder, i);
+                total += TrainAndTestFold(datafolder, i);
             }
+            */
         }
 
-        private double TrainAndTest(string datafolder, int i)
+        private double TrainAndTest(string trainSet,string testSet, string resultFile)
         {
-              Parameter parameters = new Parameter();
-              parameters.SvmType = SvmType.NU_SVR;
-              Problem train = Problem.Read(datafolder + "Train" + i.ToString() + ".txt");
-              Model model = Training.Train(train, parameters);
-              Problem test = Problem.Read(datafolder + "Test" + i.ToString() + ".txt");
-            return Prediction.Predict(test, datafolder + "result" + i.ToString() + ".txt", model, false);
+            Parameter parameters = new Parameter();
+            parameters.SvmType = SvmType.NU_SVR;
+            Problem train = Problem.Read(trainSet);
+            Model model = Training.Train(train, parameters);
+            Problem test = Problem.Read(testSet);
+            return Prediction.Predict(test, resultFile, model, true);
+        }
+
+        private double TrainAndTestFold(string datafolder, int i)
+        {
+            string trainSet = datafolder + "Train" + i.ToString() + ".txt";
+            string testSet = datafolder + "Test" + i.ToString() + ".txt";
+            string resultFile = datafolder + "result" + i.ToString() + ".txt";
+            return TrainAndTest(trainSet, testSet, resultFile); 
         }
     }
 }
