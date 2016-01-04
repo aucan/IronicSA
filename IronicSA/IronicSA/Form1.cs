@@ -25,7 +25,8 @@ namespace IronicSA
             inx.IndexingData();
 
             string dataset = inx.getMatrixesFull();
-            TrainAndTest(dataset, dataset, dataset.Replace("dataset","result"));
+            string results = dataset.Replace("dataset", "results");
+            TrainAndTest(dataset, dataset, results);
 
             /* 
             string datafolder = inx.getMatrixes(5);
@@ -39,12 +40,22 @@ namespace IronicSA
 
         private double TrainAndTest(string trainSet,string testSet, string resultFile)
         {
-            Parameter parameters = new Parameter();
-            parameters.SvmType = SvmType.NU_SVR;
+            double C;
+            double Gamma;
             Problem train = Problem.Read(trainSet);
-            Model model = Training.Train(train, parameters);
             Problem test = Problem.Read(testSet);
-            return Prediction.Predict(test, resultFile, model, true);
+            Parameter parameters = new Parameter();
+            ParameterSelection.Grid(
+                    train,
+                    parameters,
+                    "params.txt",
+                    out C,
+                    out Gamma
+            );
+            parameters.C = C; parameters.Gamma = Gamma;
+            parameters.SvmType = SvmType.NU_SVR;
+            Model model = Training.Train(train, parameters);
+            return Prediction.Predict(test, resultFile, model, false);
         }
 
         private double TrainAndTestFold(string datafolder, int i)
