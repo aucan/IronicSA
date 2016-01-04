@@ -21,7 +21,7 @@ namespace IronicSA
 
         private void btnRegression_Click(object sender, EventArgs e)
         {
-            indexing inx = new indexing(@"C:\Users\Alaattin\Source\Repos\IronicSA\IronicSA\data\tweetdata.txt");
+            indexing inx = new indexing(@"C:\Users\Alaattin\Source\Repos\IronicSA\IronicSA\IronicSA\data\tweetdata.txt");
             inx.IndexingData();
             string datafolder = inx.getMatrixes(5);
             double total = 0;
