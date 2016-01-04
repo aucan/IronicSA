@@ -23,36 +23,26 @@ namespace IronicSA
         {
             indexing inx = new indexing(@"C:\Users\Alaattin\Source\Repos\IronicSA\IronicSA\IronicSA\data\tweetdata.txt");
             inx.IndexingData();
-
+            
             string dataset = inx.getMatrixesFull();
             string results = dataset.Replace("dataset", "results");
-            TrainAndTest(dataset, dataset, results);
+            TrainAndTest(dataset, dataset, results);            
 
-            /* 
             string datafolder = inx.getMatrixes(5);
             double total = 0;
             for (int i = 0; i < 5; i++)
             {
                 total += TrainAndTestFold(datafolder, i);
             }
-            */
         }
 
         private double TrainAndTest(string trainSet,string testSet, string resultFile)
-        {
-            double C;
-            double Gamma;
+        {            
             Problem train = Problem.Read(trainSet);
             Problem test = Problem.Read(testSet);
             Parameter parameters = new Parameter();
-            ParameterSelection.Grid(
-                    train,
-                    parameters,
-                    "params.txt",
-                    out C,
-                    out Gamma
-            );
-            parameters.C = C; parameters.Gamma = Gamma;
+            parameters.C = 5;
+            parameters.Gamma = 2;
             parameters.SvmType = SvmType.NU_SVR;
             Model model = Training.Train(train, parameters);
             return Prediction.Predict(test, resultFile, model, false);

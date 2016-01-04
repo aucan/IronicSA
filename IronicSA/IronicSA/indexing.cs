@@ -34,12 +34,13 @@ namespace IronicSA
                     var splitted = line.Split('\t');
                     if (splitted.Length > 2)
                     {
-                        string[] terms = ds.CleanAndStemString(cleanHashTags(splitted[3])).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);                        
+                        string[] terms = ds.CleanAndStemString(cleanHashTags(splitted[3])).Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
                         if (terms.Length > 0)
                         {
-                            values.Add(double.Parse(splitted[2].Replace('.',','))); 
+                            values.Add(double.Parse(splitted[2].Replace('.', ',')));
                             docToTftable(terms, getOtherFeatures(splitted[3]));
                         }
+                        else Console.WriteLine(splitted[3]);
                     }
                 }
             }                     
