@@ -100,7 +100,7 @@ namespace SVM
                         output.Write(v + "\n");
                 }
 
-                if (v == target)
+                if (Math.Abs(v - target)<0.01)//aucan
                     ++correct;
                 error += (v - target) * (v - target);
                 sumv += v;
