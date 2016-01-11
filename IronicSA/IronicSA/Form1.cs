@@ -29,14 +29,14 @@ namespace IronicSA
             string results = dataset.Replace("dataset", "results");
             TrainAndTest(dataset, dataset, results);            
             */
-
-            string datafolder = inx.getMatrixes(5);
+            
+            string datafolder = inx.getMatrixes(5,chClassification.Checked);
             double total = 0;
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 5; i++)
             {
                 total += TrainAndTestFold(datafolder, i);
             }
-            MessageBox.Show(total.ToString());
+            MessageBox.Show((total/5).ToString());
         }
 
         private double TrainAndTest(string trainSet,string testSet, string resultFile)
@@ -44,21 +44,19 @@ namespace IronicSA
             Problem train = Problem.Read(trainSet);
             Problem test = Problem.Read(testSet);
             Parameter parameters = new Parameter();
-            parameters.SvmType = SvmType.NU_SVR;
-            /*
-            double C;
-            double Gamma;
-            ParameterSelection.Grid(
-                    train,
-                    parameters,
-                    "params.txt",
-                    out C,
-                    out Gamma
-            );
-            */
-            parameters.C = 8 ;
-            parameters.Gamma = 0.0004;
-
+            if (chClassification.Checked)
+            {
+                parameters.SvmType = SvmType.C_SVC;
+                parameters.C = 0.03;
+                parameters.Gamma = 0.008;
+            }
+            else
+            {
+                parameters.SvmType = SvmType.EPSILON_SVR;
+                parameters.C = 8;
+                parameters.Gamma = 0.063;
+                parameters.P = 0.5;
+            }            
             Model model = Training.Train(train, parameters);
             return Prediction.Predict(test, resultFile, model, true);
         }
